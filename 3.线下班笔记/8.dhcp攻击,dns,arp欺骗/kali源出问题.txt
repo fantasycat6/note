@@ -1,0 +1,13 @@
+W: GPG 错误：http://kali.download/kali kali-rolling InRelease: 下列签名无效： EXPKEYSIG ED444FF07D8D0BF6 Kali Linux Repository <devel@kali.org>
+E: 仓库 “http://http.kali.org/kali kali-rolling InRelease” 没有数字签名。
+N: 无法安全地用该源进行更新，所以默认禁用该源。
+N: 参见 apt-secure(8) 手册以了解仓库创建和用户配置方面的细节。
+
+解决方法1：
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ED444FF07D8D0BF6
+其中ED444FF07D8D0BF6为报错签名。
+
+
+解决方法2：
+wget archive.kali.org/archive-key.asc   //下载签名
+apt-key add archive-key.asc   //安装签名

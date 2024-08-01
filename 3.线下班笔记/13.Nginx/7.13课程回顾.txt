@@ -1,0 +1,33 @@
+CVE-2021-41773：apache 2.4.49版本引入，要求穿越的目录具有权限，根权限设置为require all granted。能目录遍历查看文件，用GET方法，要注意第一个目录得是有权限访问的目录，也能执行命令，用POST方法，URI格式 /cgi-bin/%2e%2e/%2e%2e/%2e%2e/%2e%2e/bin/bash ，命令放在请求体，要在执行的命令前面加echo，格式为：echo;要执行的命令。
+
+CVE-2021-42013：apache 2.4.50版本引入，对..进行两次url编码即可绕过。只要开始不是../，两次解码后是../就可以。在二次编码时注意不要对%进行编码，其他和 CVE-2021-41773 一样。
+
+Nginx
+	nginx：启动Nginx
+	nginx -s reload：重载配置文件
+	nginx -s reopen：重启Nginx
+	nginx -s quit：优雅的退出，即处理完请求后再退出
+	nginx -s stop：强制退出
+	nginx -t：检查配置文件有没有语法错误
+	nginx -v：查看版本
+
+配置访问权限
+	location = ：精确匹配，只有访问的内容和 = 后面的完全一致才会匹配到
+	location ：前缀匹配，匹配URI的开头部分，如设置的是 location /test 的话，那么会匹配到 http://IP/test、http://IP/test1、http://IP/test/123.html。所以给目录设置访问控制的时候要注意在目录后面加 / 。
+	
+	前缀匹配优先低于精确匹配。
+	
+	#禁止/test/index.html的所有访问
+	location = /test/index.html {
+	deny all;
+	}
+	#禁止 192.168.228.1 对于 /test/index.html 的访问
+	location = /test/index.html {
+	deny 192.168.228.1;
+	allow all;
+	}
+	#只允许 192.168.228.1 对于 /test/index.html 的访问
+	location = /test/index.html {
+	allow 192.168.228.1;
+	deny all;
+	}
